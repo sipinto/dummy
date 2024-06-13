@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>distribution_create</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/distribute.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+</head>
+<body>
+    <div class="container">
+        <div class="page-container">
+            <!-- Header -->
+            <div class="Header-Container">
+                <!-- Header 내용물 -->
+                <div class="Header-Wrap">
+                    <!-- 로고 -->
+                    <div class="Logo-Container">
+                        <a class="Logo-Anchor" href="{% url 'main_page' %}">
+                            <div class="text-3d">
+                                Company 
+                            </div>
+                        </a>
+                    </div>
+                    <!-- 검색? -->
+                    <div class="Search-Container">
+                        <div class="Search-Wrap">
+                            <form class="d-flex Search-Box" role="search">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-outline-dark" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <div class="Logout-Container">
+                        <div class="Logout-Wrap">
+                            <div class="Logout-Box">
+                                <a href="{% url 'logout' %}" class="btn btn-outline-dark btn-custom">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}  
+                    <!-- 로그인 버튼 -->
+                    <div class="Login-Container">
+                        <div class="Login-Wrap">
+                            <div class="Login-Box">
+                                <a href="{% url 'login_page' %}" class="btn btn-outline-secondary btn-custom">Login</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 회원가입 버튼 -->
+                    <div class="Register-Container">
+                        <div class="Register-Wrap">
+                            <a href="{% url 'signup_page' %}" class="btn btn-outline-dark btn-custom">Register</a>
+                        </div>
+                    </div>
+                    {% endif %} 
+                </div>
+            </div>
+            <!-- Navbar -->
+            <div class="Navbar-Container">
+                <div class="Navbar-Wrap">
+                    <div class="Navbar-Box">
+                        <a class="Navbar-Anchor" href="{% url 'board_list' %}">게시판</a>
+                    </div>
+                    <div class="Navbar-Box">
+                        <a class="Navbar-Anchor" href="{% url 'distribution_map' %}">물자 배급</a>
+                    </div>
+                    <div class="Navbar-Box">
+                        <a class="Navbar-Anchor" href="{% url 'shelter_page' %}">인근 시설맵</a>
+                    </div>
+                    <div class="Navbar-Box">
+                        <a class="Navbar-Anchor" href="{% url 'volunteer_list' %}">봉사자 모집</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Side Bar & Content -->
+            <div class="SideBar-Content-Wrap">
+                <!-- Side Bar -->
+                <div class="SideBar-Contaniner" style="height: 1300px;">
+                    <div class="SideBar-Info">
+                        <div class="Profile-wrap">
+                            <img class="Profile-image" src="{% static 'images/hun.jpg' %}"> 
+                        </div>
+                        {% if user.is_authenticated %}
+                        <div class="Info-wrap">
+                            <div class="Info-name">이름: {{ user.first_name }}{{ user.last_name }}</div>
+                            <div class="Info-role">등급: 회원</div>    
+                        </div>
+                         
+                        {% else %}  
+                        <div class="Info-wrap">
+                            <div class="Info-name">이름: ㅇㅇ</div>
+                            <div class="Info-role">등급: 비회원</div>    
+                        </div>
+                        {% endif %}
+                        
+                    </div>
+                    <div class="SideBar-Action">
+                        {% if user.is_authenticated %}
+                            <div class="Action-Wrap">
+                                <a class="Action-Board" href="{% url 'board_create' %}">카페 글쓰기</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <p>연결된 노트</p>
+                        <div><B>Host</B></div>
+                        <div>=>{{ client_ip }}</div>
+                        <div><B>Web</B></div>
+                        <div>=>{{ server_ip }}</div>
+                        <div><B>DB</B></div>
+                        <div>=>{{ mariadb_ip }}</div>
+                    </div>
+                </div>
+                <!-- Content -->
+                <div class="Content-Container">
+                    <!-- 540 -->
+                    <div class="BoardDetail-Content-Container">
+                        <div class="BoardDetail-Wrap">
+                            <!-- 제목    -->
+                            <div class="Detail-Title">
+                                <div class="Detail-Title-Wrap mt-3 mb3">
+                                    배급 장소 등록
+                                </div>
+                            </div>
+                            <!-- 내용    -->
+                            <div class="Detail-Content">
+                                <div class="Detail-Content-Wrap">
+                                    <div class="Detail-Content-Box">
+                                        <form class="distributionCreate" style="height: 1100px;" method="post" action="{% url 'distribution_create_process' %}" >
+                                            {% csrf_token %}
+                                            <div class="mb-3">
+                                                <label for="start_date" class="mb-1">제목</label>
+                                                <input type="title" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력하시오" name="title">
+                                            </div>
+                                            <div class="row g-3 mb-3">
+                                                <div class="col">
+                                                    <label for="start_date" class="mb-1">시작 날짜</label>
+                                                    <input type="date" class="form-control" name="start_date">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="end_date" class="mb-1">종료 날짜</label>
+                                                    <input type="date" class="form-control" name="end_date">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="end_date" class="mb-1">내용</label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="7" placeholder="내용을 입력하시오" name="content"></textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="end_date" class="mb-1">위치</label>
+                                                <p><em>-> 지도를 클릭해주세요!</em></p> 
+                                                <div class="map_wrap">
+                                                    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                                                </div>
+                                                <div class="row g-3 mb-3">
+                                                    <div class="col">
+                                                        <label for="start_date" class="mb-1">위도</label>
+                                                        <input type="number" class="form-control" id="latitude" name="latitude" min="-90" max="90" step="any" required>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label for="end_date" class="mb-1">경도</label>
+                                                        <input type="number" class="form-control" id="longitude" name="longitude" min="-180" max="180" step="any" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="distributionUpDelete-Button-Bundle mb-3">
+                                                <div class="distributionUpDelete-Blank">
+                                                </div>
+                                                <div class="BoardUpDelete-Form-bundle">
+                                                    <div class="Board-Cancle-Anchor-Wrap">
+                                                        <a href="{% url 'distribution_map' %}" class="Board-Cancle">Cancle</a>
+                                                    </div>
+                                                    <div class="Board-Upload-Button-Wrap">
+                                                        <button type="submit" class="Board-Upload">Submit</button>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                            
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="Footer-Container">
+                <div class="Footer-Wrap">
+                    <div class="terms-wrap">
+                        <div class="terms-Anchor">
+                            <a href="" class="Anchor-ani">회사소개</a>
+                        </div>
+                        <div class="terms-Anchor Anchor-Middle">
+                            <a href="" class="Anchor-ani">이용약관</a>
+                        </div>
+                        <div class="terms-Anchor">
+                            <a href="" class="Anchor-ani">개인정보 처리 방침</a>
+                        </div>
+                    </div>
+                    <div class="Copyright-Wrap">
+                        Copyright ⓒ 2024 Company. All rights reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ad3cc57e3e1f9fa8da23ad1f04e02cbf&libraries=services"></script>
+
+    <script src="{% static 'js/distribute/distribution_create.js' %}"></script>
+</body>
+</html>
