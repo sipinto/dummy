@@ -231,7 +231,14 @@ def logout_view(request):
 def map_template_click(request):
     button_id = request.GET.get('button_id')
     template_name = f'maps/map_template{button_id}.html'  # 클릭된 버튼에 따라 템플릿 파일 선택
-    context = {}  # 필요한 경우 템플릿에 전달할 변수를 포함한 컨텍스트 생성
+    client_ip = get_client_ip(request)
+    server_ip = get_server_ip()
+    mariadb_ip = get_mariadb_ip()
+    context = {
+        'client_ip': client_ip,
+        'server_ip': server_ip,
+        'mariadb_ip': mariadb_ip  
+    }  # 필요한 경우 템플릿에 전달할 변수를 포함한 컨텍스트 생성
     return render(request, template_name, context)
 
 def distribution_map(request):
