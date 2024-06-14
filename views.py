@@ -227,6 +227,8 @@ def logout_view(request):
     messages.success(request, '로그아웃 되셨습니다!')
     return redirect('main_page')
 
+
+
 # 지도 템플릿 변경 함수
 def map_template_click(request):
     button_id = request.GET.get('button_id')
@@ -240,6 +242,9 @@ def map_template_click(request):
         'mariadb_ip': mariadb_ip  
     }  # 필요한 경우 템플릿에 전달할 변수를 포함한 컨텍스트 생성
     return render(request, template_name, context)
+
+
+
 
 def distribution_map(request):
     client_ip = get_client_ip(request)
@@ -347,13 +352,11 @@ def volunteer_detail(request, id):
         'volunteer': volunteer,
         'volunteer_participants': volunteer_participants,
         'is_participant': is_participant,
-    }
-    return render(request, 'volunteer/volunteer_detail.html', context,
-                  {
         'client_ip': client_ip,
         'server_ip': server_ip,
-        'mariadb_ip': mariadb_ip        
-    })
+        'mariadb_ip': mariadb_ip 
+    }
+    return render(request, 'volunteer/volunteer_detail.html', context)
 
 def volunteer_create_process(request):
 
@@ -375,7 +378,7 @@ def volunteer_create_process(request):
 # 배급 데이터 바인딩
 def get_volunteer_data(request):
     # 모델에서 필요한 데이터를 쿼리합니다.
-    volunteers = Volunteer.objects.all()
+    volunteers = VolunteerRecruitment.objects.all()
 
     # 데이터를 JSON 형식으로 가공합니다.
     data = list(volunteers.values('latitude', 'longitude'))
